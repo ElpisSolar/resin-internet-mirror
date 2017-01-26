@@ -1,0 +1,16 @@
+FROM resin/%%RESIN_MACHINE_NAME%%-alpine
+
+RUN apk add --update hostapd dnsmasq s6 nginx wget
+
+VOLUME [ "/data" ]
+EXPOSE 80
+
+ENV SITES http://5pi.de
+
+RUN mkdir /www \
+ && cd /www \
+ && wget -rkpE $SITES \
+ || [ "$?" -eq 8 ]
+
+COPY files /
+ENTRYPOINT [ "s6-svscan", "/etc/service" ]
