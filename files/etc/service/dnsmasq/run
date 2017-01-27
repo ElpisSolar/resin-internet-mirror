@@ -1,4 +1,4 @@
 #!/bin/execlineb -P
 fdmove -c 2 1
 dnsmasq -x /dev/null --no-daemon -i wlan0 -z \
-  -F ${DHCP_RANGE}
+  -F 10.10.0.10,10.10.3.254
