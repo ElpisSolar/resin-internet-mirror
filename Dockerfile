@@ -14,4 +14,4 @@ RUN mkdir /www \
  || [ "$?" -eq 8 ]
 
 COPY files /
-ENTRYPOINT [ "s6-svscan", "/etc/service" ]
+ENTRYPOINT [ "/run.sh" ]
