@@ -1,18 +1,28 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-alpine
 
-RUN apk add --update hostapd dnsmasq s6 nginx wget openssh \
+RUN apk add --update -t build-deps build-base git zlib-dev openssl-dev \
+ && git clone https://github.com/xroche/httrack.git --recurse \
+      /usr/src/httrack \
+ && cd /usr/src/httrack \
+ && ./configure \
+ && make -j8 \
+ && make install \
+ && apk add --update hostapd dnsmasq s6 nginx openssh openssl \
  && sed -i 's/#PermitRootLogin.*/PermitRootLogin\ yes/' \
-      /etc/ssh/sshd_config
+      /etc/ssh/sshd_config \
+ && apk del build-deps \
+ && rm -rf /usr/src/httrack
 
 VOLUME [ "/data" ]
 EXPOSE 80
 
-ENV SITES http://5pi.de
+ENV SITES https://5pi.de
 
 RUN mkdir /www \
  && cd /www \
- && wget -rkpE $SITES \
- || [ "$?" -eq 8 ]
+ && httrack $SITES \
+ && find . -type f -maxdepth 1 -delete \
+ && rm -rf hts-cache
 
 COPY files /
 ENTRYPOINT [ "/run.sh" ]
