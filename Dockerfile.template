@@ -1,6 +1,8 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-alpine
 
-RUN apk add --update hostapd dnsmasq s6 nginx wget
+RUN apk add --update hostapd dnsmasq s6 nginx wget openssh \
+ && sed -i 's/#PermitRootLogin.*/PermitRootLogin\ yes/' \
+      /etc/ssh/sshd_config
 
 VOLUME [ "/data" ]
 EXPOSE 80
