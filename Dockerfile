@@ -2,6 +2,7 @@
 FROM resin/amd64-alpine
 
 # Install ZIM (wikipedia etc) packages
+ENV ZIMS    wiktionary_en_simple_all.zim
 ENV ZIM_URL http://download.kiwix.org/zim
 
 RUN mkdir -p /content/zim /content/kiwix /usr/src/kiwix \
@@ -20,7 +21,7 @@ RUN mkdir -p /content/zim /content/kiwix /usr/src/kiwix \
       | tar -C /usr/src/kiwix -xjf - \
  && mv /usr/src/kiwix/$BIN/* /usr/bin/ \
  && rm -rf /usr/src/kiwix \
- && for zim in wiktionary_en_simple_all.zim; do \
+ && for zim in $ZIMS; do \
       wget -O /content/zim/$zim $ZIM_URL/$zim \
       && ls /content/zim \
       && kiwix-index  /content/zim/$zim /content/kiwix/index \
