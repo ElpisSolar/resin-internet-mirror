@@ -4,15 +4,30 @@ FROM resin/amd64-alpine
 # Install ZIM (wikipedia etc) packages
 ENV ZIM_URL http://download.kiwix.org/zim
 
-RUN apk add --update openssl \
- && wget -O - https://download.kiwix.org/bin/kiwix-linux-x86_64.tar.bz2 \
-      | tar -C / -xjf - \
- && mkdir -p /content/zim /content/kiwix/{library,index} \
+RUN mkdir -p /content/zim /content/kiwix/{library,index} /usr/src/kiwix \
+ && set -x \
+ && apk add --update openssl \
+ && KIWIX= \
+ && BIN= \
+ && if [ $(uname -m) = "x86_64" ]; then \
+      KIWIX=kiwix-linux-x86_64 \
+      ; BIN= \
+    ; else \
+      KIWIX=kiwix-server-arm \
+      ; BIN=kiwix/bin \
+      ; \
+    fi \
+ && wget -O - https://download.kiwix.org/bin/$KIWIX.tar.bz2 \
+      | tar -C /usr/src/kiwix -xjf - \
+ && ls -l /usr/src/kiwix/$BIN \
+ && mv /usr/src/kiwix/$BIN/* /usr/bin/ \
+ && ls -l /usr/bin/ \
+ && rm -rf /usr/src/kiwix \
  && for zim in wiktionary_en_simple_all.zim; do \
       wget -O /content/zim/$zim $ZIM_URL/$zim \
       && ls /content/zim \
-      && /kiwix/bin/kiwix-index  /content/zim/$zim /content/kiwix/index \
-      && /kiwix/bin/kiwix-manage /content/kiwix/library add /content/zim/$zim \
+      && kiwix-index  /content/zim/$zim /content/kiwix/index \
+      && kiwix-manage /content/kiwix/library add /content/zim/$zim \
       ; \
     done
 
@@ -29,7 +44,7 @@ RUN apk add --update -t build-deps build-base git zlib-dev openssl-dev \
  && rm -rf /usr/src/*
 
 # Mirror Websites
-ENV SITES https://5pi.de
+ENV SITES http://elpissite.weebly.com/
 RUN mkdir -p /content/www \
  && cd /content/www \
  && httrack $SITES \
