@@ -4,7 +4,7 @@ FROM resin/%%RESIN_MACHINE_NAME%%-alpine
 ENV ZIM_URL http://download.kiwix.org/zim
 
 RUN apk add --update openssl \
- && wget -O - https://download.kiwix.org/bin/kiwix-linux-x86_64.tar.bz2 \
+ && wget -O - https://download.kiwix.org/bin/kiwix-server-arm.tar.bz2 \
       | tar -C / -xjf - \
  && mkdir -p /content/zim /content/kiwix/{library,index} \
  && for zim in wiktionary_en_simple_all.zim; do \
