@@ -64,8 +64,9 @@ RUN apk add --update hostapd dnsmasq s6 nginx openssh py-pip python \
  && sed -i 's/#PermitRootLogin.*/PermitRootLogin\ yes/' \
       /etc/ssh/sshd_config \
  && pip install ka-lite \
- && mkdir -p /data \
+ && mkdir -p /data/kalite \
  && adduser -h /data/kalite kalite -D \
+ && chown kalite:kalite /data/kalite \
  && su -c 'kalite manage initialize_kalite' kalite
 
 VOLUME [ "/data" ]
