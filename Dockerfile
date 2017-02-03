@@ -60,16 +60,20 @@ RUN mkdir -p /content/www \
  && for f in *.css; do sed -i 's/http:\/\/fonts.gstatic.com/..\/fonts.gstatic.com/' $f; done 
 
 
-### CAUTION: CHANGES ABOVE THIS LINE WILL BUST THE CACHE ###
 
-RUN apk add --update hostapd dnsmasq s6 nginx openssh \
+RUN apk add --update hostapd dnsmasq s6 nginx openssh py-pip python \
  && sed -i 's/#PermitRootLogin.*/PermitRootLogin\ yes/' \
-      /etc/ssh/sshd_config
+      /etc/ssh/sshd_config \
+ && pip install ka-lite \
+ && mkdir -p /data \
+ && adduser -h /data/kalite kalite -D \
+ && su -c 'kalite manage initialize_kalite' kalite
+
+VOLUME [ "/data" ]
 
 COPY files /
 
-VOLUME [ "/data" ]
-EXPOSE 80 8080
+EXPOSE 80 8080 8008
 
 
 ENTRYPOINT [ "/run.sh" ]
