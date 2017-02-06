@@ -62,6 +62,7 @@ RUN mkdir -p /content/www \
 
 
 RUN apk add --update hostapd dnsmasq s6 nginx openssh py-pip python \
+      usb-modeswitch \
  && sed -i 's/#PermitRootLogin.*/PermitRootLogin\ yes/' \
       /etc/ssh/sshd_config \
  && pip install ka-lite \

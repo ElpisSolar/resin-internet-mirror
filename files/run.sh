@@ -34,5 +34,12 @@ if [[ -n "${KA_PASSWORD:-}" && -n "${KA_EMAIL:-}" ]]; then
   KA_USER=admin su -c 'kalite shell' kalite < /opt/ka-lite-password
 fi
 
+# Configuring mobile data uplink
+mount -t devtmpfs none /dev
+args=$(lsusb.py \
+  | awk '/HUAWEI/ { split($2,a,":"); print "-v " a[1] " -p " a[2]}')
+
+usb_modeswitch $args -J # switch to modem mode
+
 # Exec s6
 exec s6-svscan /etc/service
