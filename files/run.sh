@@ -25,6 +25,11 @@ fi
 mkdir -p /data/log
 
 # Configure ka-lite
+if [[ ! -d "/data/kalite" ]]; then
+  install -o kalite -g kalite -d /data/kalite
+  su -c 'kalite manage initialize_kalite' kalite
+fi
+
 if [[ -n "${KA_PASSWORD:-}" && -n "${KA_EMAIL:-}" ]]; then
   KA_USER=admin su -c 'kalite shell' kalite < /opt/ka-lite-password
 fi
