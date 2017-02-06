@@ -35,7 +35,9 @@ if [[ -n "${KA_PASSWORD:-}" && -n "${KA_EMAIL:-}" ]]; then
 fi
 
 # Configuring mobile data uplink
+## We don't run udev, so we need devtmpfs and devpts
 mount -t devtmpfs none /dev
+mount -t devpts none /dev/pts
 args=$(lsusb.py \
   | awk '/HUAWEI/ { split($2,a,":"); print "-v " a[1] " -p " a[2]}')
 
