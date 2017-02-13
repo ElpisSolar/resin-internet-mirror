@@ -9,15 +9,7 @@ FROM resin/%%RESIN_MACHINE_NAME%%-alpine
 # wikipedia_ar_all_2016-12.zim 4.9G
 # ==> 9.5G
 
-ENV ZIMS wiktionary_en_simple_all.zim \
-         wikipedia_fa_all.zim \
-         wikipedia_ar_all.zim \
-         wikibooks_fa_all.zim \
-         wikibooks_ar_all.zim
-
-ENV ZIM_URL http://download.kiwix.org/zim
-
-RUN mkdir -p /content/zim /content/kiwix /usr/src/kiwix \
+RUN mkdir -p /usr/src/kiwix \
  && apk add --update openssl \
  && KIWIX= \
  && BIN= \
@@ -32,19 +24,7 @@ RUN mkdir -p /content/zim /content/kiwix /usr/src/kiwix \
  && wget -O - https://download.kiwix.org/bin/$KIWIX.tar.bz2 \
       | tar -C /usr/src/kiwix -xjf - \
  && mv /usr/src/kiwix/$BIN/* /usr/bin/ \
- && rm -rf /usr/src/kiwix \
- && for zim in $ZIMS; do \
-      wget -O /content/zim/$zim $ZIM_URL/$zim \
-      && ls /content/zim \
-      && kiwix-index  /content/zim/$zim /content/kiwix/index \
-      && kiwix-manage /content/kiwix/library.xml add /content/zim/$zim \
-      ; \
-    done
-
-###############################################################################
-#### CAUTION: Changes above this line will cause the rpi's to attempt to   ####
-############# download several GB data.                                    ####
-###############################################################################
+ && rm -rf /usr/src/kiwix
 
 # Install httrack
 RUN apk add --update -t build-deps build-base zlib-dev openssl-dev \
@@ -62,8 +42,6 @@ RUN apk add --update -t build-deps build-base zlib-dev openssl-dev \
  && adduser -h /data/kalite kalite -D \
  && apk del build-deps \
  && rm -rf /root/.cache/ /usr/src/*
-
-# Change above will redownload a few hundred MB
 
 # Mirror Websites
 ENV SITES http://elpissite.weebly.com
