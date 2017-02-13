@@ -48,7 +48,8 @@ RUN apk add --update -t build-deps build-base zlib-dev openssl-dev \
 ENV SITES http://elpissite.weebly.com
 RUN mkdir -p /content/www \
  && cd /content/www \
- && httrack --ext-depth=1 --disable-security-limits --max-rate 0 $SITES \
+ && httrack --ext-depth=1 --disable-security-limits --max-rate 0 \
+      --connection-per-second 100 $SITES \
  && find . -type f -maxdepth 1 -delete \
  && rm -rf hts-cache \
  && cd /content/www/elpissite.weebly.com \
