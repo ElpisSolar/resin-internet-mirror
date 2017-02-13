@@ -38,8 +38,10 @@ fi
 ## We don't run udev, so we need devtmpfs and devpts
 mount -t devtmpfs none /dev
 mount -t devpts none /dev/pts
-args=$(lsusb.py \
-  | awk '/HUAWEI/ { split($2,a,":"); print "-v " a[1] " -p " a[2]}')
+
+MODEM_VENDOR_ID="12d1"
+args=$(lsusb \
+  | awk '/ID '$MODEM_VENDOR_ID'/ { print split($6,a,":"); print "-v " a[1] " -p " a[2]}')
 
 if [[ -z "${args:-}" ]]; then
   echo "No modem found, skipping"
