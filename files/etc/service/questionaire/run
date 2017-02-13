@@ -1,0 +1,5 @@
+#!/bin/sh
+exec 2>&1
+mkdir /data/questionaire-answers
+cd /opt/questionaire-templates
+exec s6-setuidgid elpis go-questionaire -d /data/questionaire-answers -l 127.0.0.1:8081

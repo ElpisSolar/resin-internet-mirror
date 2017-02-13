@@ -62,6 +62,15 @@ RUN mkdir -p /content/www \
  && cd ../../fonts.googleapis.com \
  && for f in *.css; do sed -i 's/http:\/\/fonts.gstatic.com/..\/fonts.gstatic.com/' $f; done 
 
+# Go-Questionaire
+RUN apk add -t build-deps --update go git libc-dev \
+ && export GOPATH=/opt/go \
+ && go get github.com/elpismeanshope/go-questionnaire \
+ && go install github.com/elpismeanshope/go-questionnaire \
+ && mv $GOPATH/bin/go-questionnaire /usr/bin/ \
+ && rm -rf /opt/go \
+ && apk del build-deps
+
 VOLUME [ "/data" ]
 
 COPY files /
