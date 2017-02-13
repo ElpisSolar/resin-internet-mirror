@@ -21,8 +21,8 @@ if [[ -n "${SSH_PASS:-}" ]]; then
   echo "root:${SSH_PASS}" | chpasswd
 fi
 
-# Logfiles
-mkdir -p /data/log
+# Directories
+mkdir -p /data/log /data/content/{kiwix,zim}
 
 # Configure ka-lite
 if [[ ! -d "/data/kalite" ]]; then

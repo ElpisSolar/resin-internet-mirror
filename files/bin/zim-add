@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+root="/data/content"
+target="$root/zim"
+
+if [[ "$#" -lt 1 ]]; then
+  echo "$0 zim-url [zim-url..]" >&2
+  exit 1
+fi
+
+for zim in "$@"; do
+  name=$(basename "$zim")
+  if [[ -z "$target/$name" ]]; then
+    echo "$target/$name already exists, skipping" >&2
+    continue
+  fi
+  wget -O "$target/$name" "$ZIM_URL/$zim"
+  kiwix-index  "$target/$name" "$root/kiwix/index"
+  kiwix-manage "$target/kiwix/library.xml" add "$target/$name"
+done
