@@ -67,7 +67,9 @@ RUN apk add -t build-deps --update go git libc-dev \
  && export GOPATH=/opt/go \
  && go get github.com/elpismeanshope/go-questionnaire \
  && go install github.com/elpismeanshope/go-questionnaire \
+ && mkdir /opt/questionnaire-templates/ \
  && mv $GOPATH/bin/go-questionnaire /usr/bin/ \
+ && mv $GOPATH/src/elpismeanshope/go-questionnaire/*.html /opt/questionnaire-templates/ \
  && rm -rf /opt/go \
  && apk del build-deps
 
