@@ -11,8 +11,9 @@ fi
 
 for zim in "$@"; do
   name=$(basename "$zim")
-  if [[ -e "$target/$name" ]]; then
+  if [[ -a "$target/$name" ]]; then
     echo "$target/$name already exists, skipping" >&2
+    kiwix-manage "$root/kiwix/library.xml" add "$target/$name"
     continue
   fi
   echo "$name:"
