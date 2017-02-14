@@ -21,5 +21,5 @@ for zim in "$@"; do
   echo " - indexing"
   kiwix-index  "$target/$name" "$root/kiwix/index"
   echo " - adding"
-  kiwix-manage "$target/kiwix/library.xml" add "$target/$name"
+  kiwix-manage "$root/kiwix/library.xml" add "$target/$name"
 done

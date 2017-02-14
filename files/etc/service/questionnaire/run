@@ -1,5 +1,6 @@
 #!/bin/sh
 exec 2>&1
 mkdir -p /data/questionnaire-answers
+chown elpis:elpis /data/questionnaire-answers
 cd /opt/questionnaire-answers
 exec s6-setuidgid elpis go-questionnaire -d /data/questionnaire-answers -l 127.0.0.1:8081
