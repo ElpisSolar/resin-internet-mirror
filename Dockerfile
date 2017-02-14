@@ -45,7 +45,7 @@ RUN apk add --update -t build-deps build-base zlib-dev openssl-dev \
  && rm -rf /root/.cache/ /usr/src/*
 
 # Mirror Websites
-ENV SITES http://elpissite.weebly.com
+ENV SITES http://elpissite.weebly.com http://elpissite2.weebly.com
 RUN mkdir -p /content/www \
  && cd /content/www \
  && httrack --near --disable-security-limits --max-rate 0 \
@@ -68,9 +68,8 @@ RUN apk add -t build-deps --update go git libc-dev \
  && export GOPATH=/opt/go \
  && go get github.com/elpismeanshope/go-questionnaire \
  && go install github.com/elpismeanshope/go-questionnaire \
- && mkdir /opt/questionnaire \
  && mv $GOPATH/bin/go-questionnaire /usr/bin/ \
- && mv $GOPATH/src/github.com/elpismeanshope/go-questionnaire/*.html /opt/questionnaire/ \
+ && mv $GOPATH/src/github.com/elpismeanshope/go-questionnaire /opt/questionnaire \
  && rm -rf /opt/go \
  && apk del build-deps \
  && adduser -h /opt/questionnaire elpis -D
@@ -79,6 +78,6 @@ VOLUME [ "/data" ]
 
 COPY files /
 
-EXPOSE 80 8080 8008
+EXPOSE 80 8080 8008 8081
 
 ENTRYPOINT [ "/run.sh" ]

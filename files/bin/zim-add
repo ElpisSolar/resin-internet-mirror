@@ -2,6 +2,7 @@
 set -euo pipefail
 root="/data/content"
 target="$root/zim"
+[[ -z "${ZIM_URL:-}" ]] && ZIM_URL="https://download.kiwix.org/zim"
 
 if [[ "$#" -lt 1 ]]; then
   echo "$0 zim-url [zim-url..]" >&2
@@ -10,11 +11,15 @@ fi
 
 for zim in "$@"; do
   name=$(basename "$zim")
-  if [[ -z "$target/$name" ]]; then
+  if [[ -e "$target/$name" ]]; then
     echo "$target/$name already exists, skipping" >&2
     continue
   fi
+  echo "$name:"
+  echo " - downloading"
   wget -O "$target/$name" "$ZIM_URL/$zim"
+  echo " - indexing"
   kiwix-index  "$target/$name" "$root/kiwix/index"
+  echo " - adding"
   kiwix-manage "$target/kiwix/library.xml" add "$target/$name"
 done
