@@ -24,3 +24,5 @@ for zim in "$@"; do
   echo " - adding"
   kiwix-manage "$root/kiwix/library.xml" add "$target/$name"
 done
+echo "Reloading kiwix"
+s6-svc -h /etc/service/kiwix/
