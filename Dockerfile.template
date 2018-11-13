@@ -63,6 +63,12 @@ RUN apk add -t build-deps --update go git libc-dev \
  && apk del build-deps \
  && adduser -h /opt/questionnaire elpis -D
 
+# Digital Hub
+ENV DH_REV=65103cf4a
+RUN mkdir /content/www/digital-hub \
+  && wget -O - https://github.com/ElpisSolar/digital-hub/archive/${DH_REV}.tar.gz \
+       | tar --strip-components 1 -C /content/www/digital-hub -xzf -
+
 VOLUME [ "/data" ]
 
 COPY files /
